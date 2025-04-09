@@ -1,5 +1,5 @@
 var Big_res = new Object();
-fetch('Data-set.json') // Replace with the actual path to your JSON file
+fetch('/js/Data-set.json') // Replace with the actual path to your JSON file
   .then(response => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
