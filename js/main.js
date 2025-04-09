@@ -11,8 +11,8 @@ function Prioriti_filter(ary, prioriti, col) {
     else {
       for (var u = 0; u < lili_key.length; u++) {
         let working_obj = limi_array;
-        if (working_obj[lili_key[u]]["comp"][prioriti] < prop_1) {
-          working_obj[lili_key[u]] = obj_1;
+        if (working_obj[lili_key[u]]["comp"][prioriti] < prop_1 && notinOBJ(obj_1, working_obj)) {
+          working_obj[lili_key[lili_key.length - 1]] = obj_1;
           let val_qry = new Array();
           let nam_qry = new Array();
           let temp_keys = Object.keys(working_obj);
@@ -21,12 +21,14 @@ function Prioriti_filter(ary, prioriti, col) {
             nam_qry[g] = temp_keys[g];
           }
           let temp_objj = working_obj;
+          working_obj = {};
           let cir_qry = twoCompiener(nam_qry, val_qry);
           for (var k = 0; k < cir_qry.length; k++) {
             working_obj[`d${k}`] = temp_objj[cir_qry[k]];
           }
           limi_array = {};
           limi_array = working_obj;
+          temp_objj = {};working_obj = {};
         }
       }
     }
@@ -54,6 +56,7 @@ function ValueFatcher(priorities_mag, arrange_array) {
       big_temp_array[obky[h]] = tyx_obj[obky[h]];
       output_array[obky[h]] = tyx_obj[obky[h]];
     }
+    collacter -= eval(priorities_mag[i]);
   }
   return output_array;
 }
@@ -108,7 +111,7 @@ function GoCalculate(ty) {
     }
     for (var i = 0; i < Arrary.length; i++) {
       let obje = Arrary[i];
-      let le = ["comp", "furmola"];
+      let le = ["comp", "formula"];
       let table = creatanelemn("table", "Col_tab", "tem_prop", "", "", "", "", "", "", "", "", "");
       let how = creatanelemn("tr", "", "", "", "", "", "", "", "", "", "", "");
       let headers = ["Compression (MPa)", "Flexure (MPa)", "Thermal Conductivity (λ (W/m*K))", "Thermal Resistance (R - m²*K/W for 1 cm)", "Sound Velocity (m/s)", "Density (g/cm³)"];
@@ -123,7 +126,8 @@ function GoCalculate(ty) {
           let olb = obje[le[u]];
           let el = ["CF", "FF", "CT", "RT", "VS", "D"];
           for (var x = 0; x < el.length; x++) {
-            let cell = creatanelemn("th", "", "", "", "", "", "", "", "", "", "", olb[el[x]]);
+            let val = removeaccess(olb[el[x]]);
+            let cell = creatanelemn("th", "", "", "", "", "", "", "", "", "", "", val);
             row.appendChild(cell);
           }
         }
@@ -147,6 +151,41 @@ function GoCalculate(ty) {
       document.getElementById('col3').appendChild(tabdv);
     }
   }
+}
+
+function removeaccess(ele) {
+  let res;
+  if (!isNaN(ele)) {
+    let than = ele * 100;
+    let txt = than.toString();
+    let sigments = txt.split(".");
+    let important = sigments[0];
+    let number = eval(important) / 100;
+    let nm = Math.round(number * 100) / 100;
+    let numrs = nm * 100;
+    let anytxt = numrs.toString();
+    let txtsig = anytxt.split("");
+    let ind = 0;
+    for (var i = 0; i < txtsig.length; i++) {
+      if (txtsig[i] != ".") {
+        ind += 1;
+      }
+      else {
+        break;
+      }
+    }
+    let inf = "";
+    for (var i = 0; i < ind; i++) {
+      inf += txtsig[i];
+    }
+    let nmr = eval(inf);
+    let nmds = nmr / 100;
+    res = nmds;
+  }
+  else {
+    res = ele;
+  }
+  return res;
 }
 
 function resetop(id) {

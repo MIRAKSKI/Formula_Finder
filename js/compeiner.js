@@ -7,6 +7,16 @@ function notin(j, anyarr) {
   return true;
 }
 
+function notinOBJ(ily, anyobj) {
+  let anyarr = Object.keys(anyobj);
+  for (var i = 0; i < anyarr.length; i++) {
+    if (anyobj[anyarr[i]] == ily) {
+      return false;
+    }
+  }
+  return true;
+}
+
 function twoCompiener(nam_ary, val_ary) {
   let  ind_ary = new Array(), skip_ary = new Array();
   for (var i = 0; i < val_ary.length; i++) {
