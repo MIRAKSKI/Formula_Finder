@@ -37,14 +37,14 @@ function Prioriti_filter(ary, prioriti, col) {
 }
 
 function ValueFatcher(priorities_mag, arrange_array) {
-  let big_temp_array = Big_res;
+  let big_temp_array = Big_res, factor_y = 3;
   let output_array = new Object(), collacter = 2;
   let switch_obj = {"Compression":"CF", "Flexure":"FF", "Thermo Conduct":"CT", "Thermo Resiste":"RT"};
   for (var i = 0; i < arrange_array.length; i++) {
     arrange_array[i] = switch_obj[arrange_array[i]];
   }
   for (var i = 0; i < priorities_mag.length; i++) {
-    collacter += eval(priorities_mag[i]);
+    collacter += eval(priorities_mag[i]) * factor_y;
   }
   for (var i = 0; i < arrange_array.length; i++) {
     big_temp_array = Prioriti_filter(big_temp_array, arrange_array[i], collacter);
@@ -52,11 +52,11 @@ function ValueFatcher(priorities_mag, arrange_array) {
     let tyx_obj = big_temp_array;
     big_temp_array = {};
     output_array = {}
-    for (var h = 0; h < obky.length - eval(priorities_mag[i]); h++) {
+    for (var h = 0; h < obky.length - (eval(priorities_mag[i]) * factor_y); h++) {
       big_temp_array[obky[h]] = tyx_obj[obky[h]];
       output_array[obky[h]] = tyx_obj[obky[h]];
     }
-    collacter -= eval(priorities_mag[i]);
+    collacter -= eval(priorities_mag[i]) * factor_y;
   }
   return output_array;
 }
@@ -91,6 +91,12 @@ function GoCalculate(ty) {
     //
   }
   else if (ty == 2) {
+    for (var i = 0; i < prop_array.length; i++) {
+      let tsty = document.getElementById(prop_array[i].replace(" ", "_")).value;
+      if (tsty == "") {
+        return;
+      }
+    }
     let arrng_obj = new Object();
     for (var i = 0; i < prop_array.length; i++) {
       let ind = document.getElementById(prop_array[i].replace(" ", "_")).value;
@@ -136,9 +142,12 @@ function GoCalculate(ty) {
           let formul = "";
           for (var x = 0; x < olb.length; x++) {
             let skey = Object.keys(olb[x]);
-            formul += `${skey}(${olb[x][skey]}%)`;
-            if (x != olb.length - 1) {
-              formul += "+";
+            if (olb[x][skey] != 0) {
+              let componment = (skey.toString()).replace("_", " ");
+              formul += `${componment} (${olb[x][skey]}%)`;
+              if (x != olb.length - 1) {
+                formul += " + ";
+              }
             }
           }
           let cell = creatanelemn("td", "", "", "", "", "", "", "", "", "", "", formul);
@@ -150,6 +159,10 @@ function GoCalculate(ty) {
       let tabdv = creatanelemn("div", "Cal_hol", "", "", "", "", "", "", table, "", "", "");
       document.getElementById('col3').appendChild(tabdv);
     }
+    let cal = creatanelemn("input", "", "", "", "", "", "button", "Conducted Another Search", "", "GoCalculate(0)", "", "");
+    let nhol = creatanelemn("div", "btns_hol", "", "", "", "", "", "", cal, "", "", "");
+    let tabdv = creatanelemn("div", "Cal_hol", "", "", "", "", "", "", nhol, "", "", "");
+    document.getElementById('col3').appendChild(tabdv);
   }
 }
 
