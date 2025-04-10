@@ -100,7 +100,8 @@ function GoCalculate(ty) {
     let arrng_obj = new Object();
     for (var i = 0; i < prop_array.length; i++) {
       let ind = document.getElementById(prop_array[i].replace(" ", "_")).value;
-      arrng_obj[ind] = prop_array[i];
+      let dic_ar = {1:4, 2:3, 3:2, 4:1};
+      arrng_obj[dic_ar[ind]] = prop_array[i];
     }
     document.getElementById('col3').innerHTML = "<h2>Formula Calculation</h2>";
     let obj_keys = Object.keys(arrng_obj);
@@ -145,11 +146,13 @@ function GoCalculate(ty) {
             if (olb[x][skey] != 0) {
               let componment = (skey.toString()).replace("_", " ");
               formul += `${componment} (${olb[x][skey]}%)`;
+              formul = formul.replace("+#", "+");
               if (x != olb.length - 1) {
-                formul += " + ";
+                formul += " +# ";
               }
             }
           }
+          formul = formul.replace(" +# ", "");
           let cell = creatanelemn("td", "", "", "", "", "", "", "", "", "", "", formul);
           cell.setAttribute("colspan", 6);
           row.appendChild(cell);
